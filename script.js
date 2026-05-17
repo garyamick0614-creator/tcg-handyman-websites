@@ -233,6 +233,176 @@
     });
   }
 
+  /* ---------- Dark / light theme toggle ---------- */
+  (function () {
+    var root = document.documentElement;
+    var key = 'mhs-theme';
+    var stored = null;
+    try { stored = localStorage.getItem(key); } catch (e) { /* private mode */ }
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = stored || (prefersDark ? 'dark' : 'light');
+    if (theme === 'dark') root.setAttribute('data-theme', 'dark');
+
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    function sync() {
+      var cur = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      btn.setAttribute('aria-pressed', cur === 'dark' ? 'true' : 'false');
+      btn.setAttribute('aria-label', cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+    sync();
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme', 'dark');
+      else root.removeAttribute('data-theme');
+      try { localStorage.setItem(key, next); } catch (e) { /* ignore */ }
+      sync();
+    });
+    /* Follow system change if user hasn't manually toggled (no stored pref) */
+    if (!stored && window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var mqHandler = function (e) {
+        var s; try { s = localStorage.getItem(key); } catch (err) { s = null; }
+        if (s) return;
+        if (e.matches) root.setAttribute('data-theme', 'dark');
+        else root.removeAttribute('data-theme');
+        sync();
+      };
+      if (mq.addEventListener) mq.addEventListener('change', mqHandler);
+      else if (mq.addListener) mq.addListener(mqHandler);
+    }
+  })();
+
+  /* ---------- Before/After image slider ---------- */
+  document.querySelectorAll('.gallery-tile.is-slider').forEach(function (tile) {
+    var handle = tile.querySelector('.ba-handle');
+    var grip   = tile.querySelector('.ba-grip');
+    var after  = tile.querySelector('.ba-after');
+    if (!handle || !after) return;
+    var dragging = false;
+    function setPos(clientX) {
+      var rect = tile.getBoundingClientRect();
+      var ratio = (clientX - rect.left) / rect.width;
+      if (ratio < 0) ratio = 0; else if (ratio > 1) ratio = 1;
+      var pct = ratio * 100;
+      handle.style.left = pct + '%';
+      if (grip) grip.style.left = pct + '%';
+      after.style.clipPath = 'inset(0 ' + (100 - pct).toFixed(2) + '% 0 0)';
+    }
+    function down(e) {
+      dragging = true;
+      var x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      setPos(x);
+      if (e.pointerId !== undefined && tile.setPointerCapture) {
+        try { tile.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+    }
+    function move(e) {
+      if (!dragging) return;
+      var x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      setPos(x);
+      if (e.cancelable) e.preventDefault();
+    }
+    function up() { dragging = false; }
+    tile.addEventListener('pointerdown', down);
+    tile.addEventListener('pointermove', move);
+    tile.addEventListener('pointerup', up);
+    tile.addEventListener('pointercancel', up);
+    tile.addEventListener('pointerleave', up);
+    /* Touch fallback for older Safari */
+    tile.addEventListener('touchstart', down, { passive: true });
+    tile.addEventListener('touchmove', move, { passive: false });
+    tile.addEventListener('touchend', up);
+  });
+
+  /* ---------- Multi-step quote form ---------- */
+  (function () {
+    var form = document.getElementById('quote-form');
+    if (!form) return;
+    var steps = form.querySelectorAll('.ms-step');
+    var totalSteps = steps.length;
+    var barFill = document.getElementById('ms-bar-fill');
+    var stepLabel = document.getElementById('ms-step-label');
+    var stepCount = document.getElementById('ms-step-count');
+    var errorEl = document.getElementById('ms-error');
+    var bar = form.querySelector('.ms-bar');
+    var stepNames = ['The job', 'Contact info', 'Timing &amp; preferences'];
+
+    function showStep(n) {
+      steps.forEach(function (s) {
+        var stepNum = parseInt(s.getAttribute('data-step'), 10);
+        s.hidden = (stepNum !== n);
+      });
+      if (barFill) barFill.style.width = ((n / totalSteps) * 100).toFixed(2) + '%';
+      if (bar) bar.setAttribute('aria-valuenow', String(Math.round((n / totalSteps) * 100)));
+      if (stepLabel) stepLabel.innerHTML = stepNames[n - 1] || '';
+      if (stepCount) stepCount.textContent = 'Step ' + n + ' of ' + totalSteps;
+      if (errorEl) errorEl.classList.remove('is-shown');
+      /* Focus first input in the new step for screen-reader continuity */
+      var active = form.querySelector('.ms-step[data-step="' + n + '"]');
+      if (active) {
+        var firstField = active.querySelector('input, select, textarea');
+        if (firstField) setTimeout(function () { firstField.focus({ preventScroll: true }); }, 80);
+      }
+    }
+
+    function validateStep(n) {
+      var active = form.querySelector('.ms-step[data-step="' + n + '"]');
+      if (!active) return true;
+      var fields = active.querySelectorAll('input[required], select[required], textarea[required]');
+      for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        if (!f.value || (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value))) {
+          if (errorEl) {
+            errorEl.textContent = 'Quick fix needed — ' + (f.previousElementSibling ? f.previousElementSibling.textContent.toLowerCase() : 'a required field') + ' looks empty.';
+            errorEl.classList.add('is-shown');
+          }
+          f.focus();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    form.querySelectorAll('.ms-next').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var current = parseInt(b.closest('.ms-step').getAttribute('data-step'), 10);
+        if (!validateStep(current)) return;
+        var next = parseInt(b.getAttribute('data-target-step'), 10);
+        showStep(next);
+      });
+    });
+    form.querySelectorAll('.ms-prev').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var target = parseInt(b.getAttribute('data-target-step'), 10);
+        showStep(target);
+      });
+    });
+
+    /* Pre-fill job_type when user came via a service-page CTA (?service=drywall etc.) */
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var hint = params.get('service');
+      if (hint) {
+        var sel = document.getElementById('f-type');
+        if (sel) {
+          var map = {
+            'drywall': 'Drywall & paint', 'plumbing': 'Plumbing fix', 'electrical': 'Electrical (light work)',
+            'decks': 'Deck / outdoor', 'kitchen-bath': 'Kitchen / bath remodel', 'installs': 'TV mount / shelving / small install'
+          };
+          var label = map[hint];
+          if (label) {
+            for (var i = 0; i < sel.options.length; i++) {
+              if (sel.options[i].text === label || sel.options[i].text.indexOf(label) === 0) {
+                sel.selectedIndex = i; break;
+              }
+            }
+          }
+        }
+      }
+    } catch (e) { /* ignore */ }
+  })();
+
   /* ---------- PWA: register service worker ---------- */
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     window.addEventListener('load', function () {

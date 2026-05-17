@@ -1,7 +1,7 @@
 /* Mike's Handyman Service service worker
    Static-asset precache + stale-while-revalidate for same-origin GETs. */
 
-const VERSION = 'mhs-v3';
+const VERSION = 'mhs-v4';
 const PRECACHE = [
   '/',
   '/styles.css',
