@@ -1,0 +1,20 @@
+# Netlify CLI state (local link only; do not commit)
+.netlify/
+
+# OS junk
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (if anyone adds tooling later)
+node_modules/
