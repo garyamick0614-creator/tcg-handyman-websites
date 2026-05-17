@@ -4,18 +4,6 @@
   var yr = document.getElementById('yr');
   if (yr) yr.textContent = String(new Date().getFullYear());
 
-  document.querySelectorAll('a[data-tier]').forEach(function (a) {
-    a.addEventListener('click', function () {
-      var t = a.getAttribute('data-tier');
-      var sel = document.getElementById('f-tier');
-      if (sel && t) {
-        for (var i = 0; i < sel.options.length; i++) {
-          if (sel.options[i].value === t) { sel.selectedIndex = i; break; }
-        }
-      }
-    });
-  });
-
   var phone = document.getElementById('f-phone');
   if (phone) {
     phone.addEventListener('input', function () {
