@@ -1107,6 +1107,120 @@ section { padding: 72px 0; }
 .ms-error.is-shown { display: block; }
 [data-theme="dark"] .ms-error { background: rgba(220,38,38,0.18); color: #fca5a5; }
 
+/* ---------- Open / Closed status badge ---------- */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 12px 7px 10px;
+  border-radius: 999px;
+  font-size: 12.5px; font-weight: 700;
+  background: rgba(22,163,74,0.12); color: #15803d;
+  border: 1px solid rgba(22,163,74,0.22);
+  margin-right: 8px;
+  letter-spacing: 0;
+}
+.status-pill.is-closed { background: rgba(220,38,38,0.10); color: #b91c1c; border-color: rgba(220,38,38,0.22); }
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: currentColor;
+  position: relative;
+}
+.status-pill .status-dot::after {
+  content: ""; position: absolute; inset: -3px;
+  border-radius: 50%;
+  background: currentColor; opacity: 0.35;
+  animation: pulse 1.8s ease-out infinite;
+}
+.status-pill.is-closed .status-dot::after { animation: none; }
+.status-detail { font-weight: 500; opacity: 0.85; }
+[data-theme="dark"] .status-pill { background: rgba(22,163,74,0.18); color: #4ade80; border-color: rgba(22,163,74,0.32); }
+[data-theme="dark"] .status-pill.is-closed { background: rgba(220,38,38,0.18); color: #fca5a5; border-color: rgba(220,38,38,0.32); }
+
+/* ---------- Photo lightbox ---------- */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(11,18,32,0.85);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+  padding: clamp(16px, 4vw, 40px);
+  cursor: zoom-out;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.lightbox.is-open { display: flex; }
+.lightbox-frame {
+  max-width: 960px; width: 100%;
+  background: #fff;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  cursor: default;
+  animation: lightboxIn .25s ease;
+  position: relative;
+}
+[data-theme="dark"] .lightbox-frame { background: var(--bg-soft); }
+@keyframes lightboxIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.lightbox-img {
+  aspect-ratio: 16 / 10;
+  background-size: cover; background-position: center;
+}
+.lightbox-body { padding: 22px 28px 26px; }
+.lightbox-body h3 { margin: 0 0 6px; font-size: 20px; letter-spacing: -0.01em; }
+.lightbox-body p { margin: 0; color: var(--ink-3); font-size: 14.5px; }
+.lightbox-tag {
+  display: inline-block;
+  background: var(--brand-soft); color: var(--brand);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px;
+  margin-bottom: 10px;
+}
+.lightbox-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.92); color: var(--ink);
+  border: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  z-index: 2;
+}
+.lightbox-close:hover { background: #fff; }
+.lightbox-close svg { width: 18px; height: 18px; }
+.gallery-tile:not(.is-slider) { cursor: zoom-in; }
+
+/* ---------- Back-to-top ---------- */
+.to-top {
+  position: fixed; left: 16px; bottom: 16px;
+  width: 44px; height: 44px;
+  background: var(--ink); color: #fff;
+  border: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 60;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease, background .15s ease;
+  pointer-events: none;
+}
+.to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: var(--brand); }
+.to-top svg { width: 20px; height: 20px; }
+[data-theme="dark"] .to-top { background: var(--brand); }
+[data-theme="dark"] .to-top:hover { background: var(--brand-dark); }
+@media (max-width: 720px) {
+  .to-top { left: 12px; bottom: 12px; width: 40px; height: 40px; }
+}
+
+/* ---------- Confetti (thanks page) ---------- */
+.confetti-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+
 /* ---------- Reveal-on-scroll ---------- */
 .reveal {
   opacity: 0;

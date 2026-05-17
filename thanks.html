@@ -7,7 +7,7 @@
 <title>Got your request &mdash; Mike&rsquo;s Handyman Service</title>
 <meta name="robots" content="noindex,nofollow" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F97316'/%3E%3Cpath d='M18 44 L46 16 M40 16 H46 V22' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
 <header class="site-header">
@@ -38,5 +38,74 @@
     <span><a href="/privacy.html" style="color:#b8c0d2">Privacy</a> &middot; <a href="/terms.html" style="color:#b8c0d2">Terms</a> &middot; Site by <a href="https://tcgsolutions.net" style="color:#b8c0d2;text-decoration:underline" rel="noopener">TCG Solutions</a></span>
   </div>
 </footer>
+<canvas class="confetti-canvas" id="confetti" aria-hidden="true"></canvas>
+<script>
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var canvas = document.getElementById('confetti');
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  function size() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  size();
+  window.addEventListener('resize', size);
+
+  var COLORS = ['#f97316', '#fb923c', '#fbbf24', '#16a34a', '#0ea5e9', '#a855f7', '#ffffff'];
+  var pieces = [];
+  var COUNT = 110;
+  var gravity = 0.13;
+  var drag = 0.985;
+
+  function spawn() {
+    for (var i = 0; i < COUNT; i++) {
+      pieces.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 80,
+        y: canvas.height / 3,
+        vx: (Math.random() - 0.5) * 9,
+        vy: -(Math.random() * 9 + 6),
+        size: Math.random() * 7 + 4,
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.3,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        shape: Math.random() < 0.45 ? 'rect' : 'circle',
+        life: 1
+      });
+    }
+  }
+
+  function step() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = pieces.length - 1; i >= 0; i--) {
+      var p = pieces[i];
+      p.vy += gravity;
+      p.vx *= drag;
+      p.vy *= drag;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      if (p.y > canvas.height + 40) p.life -= 0.05;
+      if (p.life <= 0) { pieces.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size / 1.6);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    if (pieces.length > 0) requestAnimationFrame(step);
+  }
+
+  spawn();
+  step();
+  /* Second small burst after a beat for a fuller effect */
+  setTimeout(function () { spawn(); step(); }, 350);
+})();
+</script>
 </body>
 </html>

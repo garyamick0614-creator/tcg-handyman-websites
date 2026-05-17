@@ -403,6 +403,130 @@
     } catch (e) { /* ignore */ }
   })();
 
+  /* ---------- Open / Closed status pill ---------- */
+  (function () {
+    var pill = document.getElementById('status-pill');
+    if (!pill) return;
+    var textEl = document.getElementById('status-text');
+    var detailEl = document.getElementById('status-detail');
+    /* Hours, local-time. Day 0=Sun, 6=Sat */
+    var SCHED = {
+      0: null,                                  /* Sunday — closed */
+      1: { open: 7.5,  close: 17, label: 'Mon' },
+      2: { open: 7.5,  close: 17, label: 'Tue' },
+      3: { open: 7.5,  close: 17, label: 'Wed' },
+      4: { open: 7.5,  close: 17, label: 'Thu' },
+      5: { open: 7.5,  close: 17, label: 'Fri' },
+      6: { open: 8,    close: 12, label: 'Sat' }
+    };
+    function fmtTime(h) {
+      var hh = Math.floor(h);
+      var mm = Math.round((h - hh) * 60);
+      var ap = hh >= 12 ? 'pm' : 'am';
+      var disp = hh % 12; if (disp === 0) disp = 12;
+      return disp + (mm > 0 ? (':' + (mm < 10 ? '0' : '') + mm) : '') + ap;
+    }
+    function nextOpenLabel(fromDay) {
+      for (var i = 1; i <= 7; i++) {
+        var d = (fromDay + i) % 7;
+        if (SCHED[d]) return SCHED[d].label + ' ' + fmtTime(SCHED[d].open);
+      }
+      return '';
+    }
+    function update() {
+      var now = new Date();
+      var day = now.getDay();
+      var h = now.getHours() + now.getMinutes() / 60;
+      var today = SCHED[day];
+      if (today && h >= today.open && h < today.close) {
+        pill.classList.remove('is-closed');
+        textEl.textContent = 'Open now';
+        detailEl.textContent = 'until ' + fmtTime(today.close);
+      } else {
+        pill.classList.add('is-closed');
+        textEl.textContent = 'Closed';
+        if (today && h < today.open) {
+          detailEl.textContent = 'opens ' + fmtTime(today.open) + ' today';
+        } else {
+          detailEl.textContent = 'opens ' + nextOpenLabel(day);
+        }
+      }
+    }
+    update();
+    /* Re-check every minute so the pill updates without reload */
+    setInterval(update, 60000);
+  })();
+
+  /* ---------- Photo lightbox ---------- */
+  (function () {
+    var lb = document.getElementById('lightbox');
+    if (!lb) return;
+    var img   = document.getElementById('lightbox-img');
+    var tag   = document.getElementById('lightbox-tag');
+    var title = document.getElementById('lightbox-title');
+    var desc  = document.getElementById('lightbox-desc');
+    var close = document.getElementById('lightbox-close');
+
+    function open(tile) {
+      var t = tile.querySelector('.tile-tag');
+      var cap = tile.querySelector('figcaption');
+      var s = cap ? cap.querySelector('strong') : null;
+      var p = cap ? cap.querySelector('span')  : null;
+      /* Use the tile's gradient as the lightbox image */
+      var bg = window.getComputedStyle(tile).backgroundImage;
+      img.style.background = (bg && bg !== 'none')
+        ? bg + ', linear-gradient(135deg, #1c2940 0%, #0b1220 100%)'
+        : 'linear-gradient(135deg, #1c2940 0%, #0b1220 100%)';
+      img.style.backgroundSize = 'cover';
+      img.style.backgroundPosition = 'center';
+      tag.textContent = t ? t.textContent : 'Job';
+      title.textContent = s ? s.textContent : '';
+      desc.textContent  = p ? p.textContent : '';
+      lb.hidden = false;
+      lb.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function shut() {
+      lb.classList.remove('is-open');
+      lb.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    /* Only the non-slider tiles open the lightbox */
+    document.querySelectorAll('.gallery-tile:not(.is-slider)').forEach(function (tile) {
+      tile.setAttribute('tabindex', '0');
+      tile.setAttribute('role', 'button');
+      tile.addEventListener('click', function () { open(tile); });
+      tile.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(tile); }
+      });
+    });
+
+    if (close) close.addEventListener('click', shut);
+    lb.addEventListener('click', function (e) {
+      if (e.target === lb) shut();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lb.classList.contains('is-open')) shut();
+    });
+  })();
+
+  /* ---------- Back-to-top ---------- */
+  (function () {
+    var btn = document.getElementById('to-top');
+    if (!btn) return;
+    var threshold = 600;
+    function onScroll() {
+      if (window.pageYOffset > threshold) btn.classList.add('is-visible');
+      else btn.classList.remove('is-visible');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    onScroll();
+  })();
+
   /* ---------- PWA: register service worker ---------- */
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     window.addEventListener('load', function () {
