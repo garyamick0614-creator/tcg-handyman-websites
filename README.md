@@ -2,6 +2,10 @@
 
 Static landing site that sells TCG Solutions' website-design service to handymen, contractors, and other small service-pro businesses. Pure HTML/CSS/JS, deployed on Netlify.
 
+**Live:** https://tcg-handyman-websites-932.netlify.app
+**Admin:** https://app.netlify.com/projects/tcg-handyman-websites-932
+**Repo:** https://github.com/garyamick0614-creator/tcg-handyman-websites
+
 ## What's here
 
 | File | Purpose |
