@@ -18,6 +18,11 @@
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://tcg-handyman-websites-932.netlify.app/" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F97316'/%3E%3Cpath d='M18 44 L46 16 M40 16 H46 V22' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Mike's Handyman" />
+<link rel="apple-touch-icon" href="/icon-192.svg" />
 <link rel="stylesheet" href="styles.css" />
 <script type="application/ld+json">
 {
@@ -110,6 +115,7 @@
       <span class="brand-text">Mike&rsquo;s Handyman <span class="brand-tail">Service</span></span>
     </a>
     <nav class="nav-primary" aria-label="Primary">
+      <a href="#estimator">Estimate</a>
       <a href="#services">Services</a>
       <a href="#gallery">Gallery</a>
       <a href="#about">About</a>
@@ -129,6 +135,10 @@
   <div class="container hero-grid">
     <div class="hero-copy">
       <p class="eyebrow"><span class="dot"></span> Serving Indianapolis &amp; central Indiana since 2014</p>
+      <div class="live-ticker" id="live-ticker" aria-live="polite">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span id="live-ticker-text">Just finished: Bathroom vanity swap &middot; Castleton &middot; 2 hrs ago</span>
+      </div>
       <h1>Honest work.<br/><span class="accent">Fair price.</span></h1>
       <p class="lede">
         Repairs, remodels, installs, and the long list of stuff your house keeps adding to it. Free written estimates, same-week scheduling on most jobs, and the kind of follow-through that&rsquo;s gotten harder to find.
@@ -218,7 +228,56 @@
   </div>
 </section>
 
-<section id="services" class="services">
+<section id="estimator" class="estimator reveal">
+  <div class="container">
+    <p class="section-eyebrow">Try it now</p>
+    <h2 class="section-title">Ballpark your job in 10 seconds.</h2>
+    <p class="section-sub">Pick the service, pick a size. We&rsquo;ll show you what a typical project in that range runs &mdash; live, with no form to fill out first.</p>
+
+    <div class="estimator-card">
+      <div class="estimator-controls">
+        <div class="est-field">
+          <label class="est-label" for="est-service">1. Service</label>
+          <select id="est-service" class="est-select">
+            <option value="drywall">Drywall &amp; paint</option>
+            <option value="plumbing">Plumbing fixes</option>
+            <option value="electrical">Light electrical</option>
+            <option value="decks">Decks &amp; outdoor</option>
+            <option value="kitchen-bath">Kitchen / bath remodel</option>
+            <option value="installs">Home installs &amp; mounting</option>
+          </select>
+        </div>
+        <div class="est-field">
+          <span class="est-label">2. Job size</span>
+          <div class="est-pills" role="group" aria-label="Job size">
+            <button type="button" class="est-pill" data-size="small">Small</button>
+            <button type="button" class="est-pill" data-size="medium" aria-pressed="true">Medium</button>
+            <button type="button" class="est-pill" data-size="large">Large</button>
+          </div>
+        </div>
+        <div class="est-field">
+          <span class="est-label">3. Need materials supplied?</span>
+          <div class="est-pills" role="group" aria-label="Materials supplied">
+            <button type="button" class="est-pill" data-materials="customer" aria-pressed="true">I&rsquo;ll supply</button>
+            <button type="button" class="est-pill" data-materials="mixed">Mixed</button>
+            <button type="button" class="est-pill" data-materials="mike">Mike supplies</button>
+          </div>
+        </div>
+      </div>
+      <div class="estimator-result">
+        <span class="est-out-label" id="est-out-service">Drywall &amp; paint &middot; Medium</span>
+        <span class="est-out-range" id="est-out-range">$350 &ndash; $700</span>
+        <p class="est-out-meta" id="est-out-meta">Most jobs in this range wrap in 1&ndash;2 days. Free written estimate either way.</p>
+        <div class="est-out-cta">
+          <a href="#quote" class="btn btn-primary btn-lg">Get a real estimate &rarr;</a>
+        </div>
+      </div>
+    </div>
+    <p class="est-disclaimer">Ranges based on actual jobs we&rsquo;ve done in the last 12 months. Materials supplied by Mike add roughly 12&ndash;18&#37; for our standard parts catalog.</p>
+  </div>
+</section>
+
+<section id="services" class="services reveal">
   <div class="container">
     <p class="section-eyebrow">What we do</p>
     <h2 class="section-title">If it&rsquo;s on your honey-do list, it&rsquo;s on ours.</h2>
@@ -314,7 +373,7 @@
   </div>
 </section>
 
-<section id="gallery" class="gallery">
+<section id="gallery" class="gallery reveal">
   <div class="container">
     <p class="section-eyebrow">Recent work</p>
     <h2 class="section-title">Before, after, and the part most folks skip&hellip; the cleanup.</h2>
@@ -377,7 +436,7 @@
   </div>
 </section>
 
-<section id="about" class="about-section">
+<section id="about" class="about-section reveal">
   <div class="container about-grid">
     <div class="about-photo" aria-hidden="true">
       <div class="about-photo-frame"></div>
@@ -413,7 +472,7 @@
   </div>
 </section>
 
-<section id="area" class="area-section">
+<section id="area" class="area-section reveal">
   <div class="container">
     <p class="section-eyebrow">Where we work</p>
     <h2 class="section-title">Indianapolis and the surrounding counties &mdash; within 35 miles of downtown.</h2>
@@ -453,11 +512,22 @@
         <div class="map-label">35-mile service radius<br/><span>from downtown Indianapolis</span></div>
       </div>
     </div>
+    <div class="zip-check">
+      <label for="zip-input">
+        <strong>Check your ZIP code</strong>
+        <span>Type your 5-digit ZIP and we&rsquo;ll tell you if you&rsquo;re in our radius.</span>
+      </label>
+      <div class="zip-check-row">
+        <input id="zip-input" class="zip-input" type="text" inputmode="numeric" pattern="\d{5}" maxlength="5" placeholder="46220" autocomplete="postal-code" aria-describedby="zip-result" />
+        <div id="zip-result" class="zip-result" role="status" aria-live="polite">Enter ZIP&hellip;</div>
+      </div>
+    </div>
+
     <p class="area-fine">Outside the radius? Call &mdash; for repeat customers and bigger jobs we&rsquo;ll travel with a small drive-time charge built into the quote.</p>
   </div>
 </section>
 
-<section id="reviews" class="testimonials">
+<section id="reviews" class="testimonials reveal">
   <div class="container">
     <p class="section-eyebrow">What customers say</p>
     <h2 class="section-title">Real reviews from real Indianapolis homeowners.</h2>
@@ -574,15 +644,15 @@
     </div>
 
     <div class="proof-strip">
-      <div class="proof-stat"><strong>4.9&#9733;</strong><span>average Google review</span></div>
-      <div class="proof-stat"><strong>11 yrs</strong><span>serving central Indiana</span></div>
-      <div class="proof-stat"><strong>1,800+</strong><span>jobs completed</span></div>
-      <div class="proof-stat"><strong>48 hrs</strong><span>typical response time</span></div>
+      <div class="proof-stat"><strong class="counter" data-target="4.9" data-decimals="1" data-suffix="&#9733;">0&#9733;</strong><span>average Google review</span></div>
+      <div class="proof-stat"><strong class="counter" data-target="11" data-suffix=" yrs">0 yrs</strong><span>serving central Indiana</span></div>
+      <div class="proof-stat"><strong class="counter" data-target="1800" data-suffix="+">0+</strong><span>jobs completed</span></div>
+      <div class="proof-stat"><strong class="counter" data-target="48" data-suffix=" hrs">0 hrs</strong><span>typical response time</span></div>
     </div>
   </div>
 </section>
 
-<section id="faq" class="faq">
+<section id="faq" class="faq reveal">
   <div class="container">
     <p class="section-eyebrow">FAQ</p>
     <h2 class="section-title">Straight answers.</h2>
@@ -623,7 +693,7 @@
   </div>
 </section>
 
-<section id="quote" class="start">
+<section id="quote" class="start reveal">
   <div class="container start-grid">
     <div class="start-copy">
       <p class="section-eyebrow">Request a quote</p>
