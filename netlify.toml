@@ -20,6 +20,12 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
+[[headers]]
+  for = "/og-image.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+    Content-Type = "image/svg+xml"
+
 [[redirects]]
   from = "/thanks"
   to = "/thanks.html"

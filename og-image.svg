@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Mike's Handyman Service — Honest work. Fair price. Indianapolis &amp; central Indiana.">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="60%" stop-color="#111a2e"/>
+      <stop offset="100%" stop-color="#1c2940"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="85%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.40"/>
+      <stop offset="60%" stop-color="#f97316" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <pattern id="diag" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(135)">
+      <line x1="0" y1="0" x2="0" y2="24" stroke="#ffffff" stroke-width="1" stroke-opacity="0.04"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  <rect width="1200" height="630" fill="url(#diag)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Brand mark -->
+  <g transform="translate(80, 80)">
+    <rect width="84" height="84" rx="18" fill="url(#markGrad)"/>
+    <path d="M22 60 L56 22 M48 22 H58 V32" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <text x="184" y="118" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif" font-size="32" font-weight="800" fill="#ffffff" letter-spacing="-0.5">Mike&#8217;s Handyman</text>
+  <text x="184" y="152" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif" font-size="18" font-weight="600" fill="#b8c0d2" letter-spacing="2.5">SERVICE</text>
+
+  <!-- Headline -->
+  <text x="80" y="320" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif" font-size="96" font-weight="800" fill="#ffffff" letter-spacing="-3.5">Honest work.</text>
+  <text x="80" y="430" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif" font-size="96" font-weight="800" fill="#f97316" letter-spacing="-3.5">Fair price.</text>
+
+  <!-- Sub -->
+  <text x="80" y="490" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif" font-size="28" font-weight="500" fill="#d6dbe6">Indianapolis &#183; family-run since 2014 &#183; licensed &amp; insured</text>
+
+  <!-- Trust row -->
+  <g transform="translate(80, 540)" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif" font-size="18" font-weight="600" fill="#ffffff">
+    <g>
+      <rect x="0" y="0" width="200" height="44" rx="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <text x="100" y="29" text-anchor="middle">4.9&#9733; on Google</text>
+    </g>
+    <g transform="translate(216, 0)">
+      <rect x="0" y="0" width="200" height="44" rx="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <text x="100" y="29" text-anchor="middle">Free estimates</text>
+    </g>
+    <g transform="translate(432, 0)">
+      <rect x="0" y="0" width="240" height="44" rx="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <text x="120" y="29" text-anchor="middle">Same-week scheduling</text>
+    </g>
+  </g>
+
+  <!-- Phone callout -->
+  <g transform="translate(1120, 540)" font-family="ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif">
+    <g transform="translate(-260, 0)">
+      <rect x="0" y="0" width="260" height="44" rx="22" fill="#f97316"/>
+      <text x="130" y="29" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Call (317) 555-0184</text>
+    </g>
+  </g>
+</svg>
