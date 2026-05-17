@@ -16,9 +16,16 @@ if (-not $netlify) {
 
 $stateFile = Join-Path $PSScriptRoot '.netlify\state.json'
 if (-not (Test-Path $stateFile)) {
-    Write-Host "Site not linked yet. Linking new site '$SiteName'..." -ForegroundColor Cyan
-    & netlify sites:create --name $SiteName --with-ci 2>$null
+    Write-Host "Site not linked yet. Creating new site '$SiteName'..." -ForegroundColor Cyan
+    & netlify sites:create --name $SiteName --account-slug gary-amick0614-earfstq
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "sites:create failed; site name may already be taken. Trying link by name..." -ForegroundColor Yellow
+    }
     & netlify link --name $SiteName
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Could not link site '$SiteName'. Run 'netlify link' manually." -ForegroundColor Red
+        exit $LASTEXITCODE
+    }
 }
 
 $deployArgs = @('deploy', '--dir', '.', '--message', "Handyman landing $(Get-Date -Format 'yyyy-MM-dd HH:mm')")
